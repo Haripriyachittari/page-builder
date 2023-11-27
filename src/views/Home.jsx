@@ -33,11 +33,14 @@ const Home = () => {
     setSelectedElement(element);
   };
 
-  const handleElementOnDrop = () => {
+  const handleSave = () => {
+    console.log("save");
     if (elements.map((element) => element.id).includes(modalValues.id)) {
+      debugger;
       setElements((prev) =>
         prev.reduce((acc, curr) => {
           if (curr.id === modalValues.id) {
+            debugger;
             acc.push(modalValues);
           } else {
             acc.push(curr);
@@ -46,17 +49,47 @@ const Home = () => {
         }, [])
       );
       setSelectedElement(null);
+    } else {
+      debugger;
+      setElements((prev) => [...prev, modalValues]);
     }
-    setElements((prev) => [...prev, modalValues]);
     setModalValues(null);
   };
 
   const handleDrag = (event) => {
+    if (event.target.dataset.customElement) {
+      event.dataTransfer.setData("text/plain", event.target.id);
+      return;
+    }
     event.dataTransfer.setData("text/plain", event.target.dataset.elementType);
   };
 
   const handleDrop = (event) => {
-    console.log("dropevent", event);
+    const data = event.dataTransfer.getData("text/plain");
+    console.log(data, "data");
+    if (!["button", "input", "label"].includes(data)) {
+      if (elements.map((element) => element.id).includes(data)) {
+        setElements((prev) =>
+          prev.reduce((acc, curr) => {
+            if (curr.id === data) {
+              acc.push({
+                ...curr,
+                properties: {
+                  ...curr.properties,
+                  x: event.clientX,
+                  y: event.clientY,
+                },
+              });
+            } else {
+              acc.push(curr);
+            }
+            return acc;
+          }, [])
+        );
+      }
+      return;
+    }
+
     const element = {
       id: uuid(),
       type: event.dataTransfer.getData("text/plain"),
@@ -108,7 +141,7 @@ const Home = () => {
             onClick={() => handleSelectElement(element)}
             id={element.id}
             draggable
-            data-element-type={element.type}
+            data-custom-element
             className={`${elementStyles[element.type]} ${
               element.id === selectedElement?.id
                 ? selectedElementedStyles
@@ -141,7 +174,7 @@ const Home = () => {
             <ConfigurationModal
               modalValues={modalValues}
               handleChangeModalValues={handleChangeModalValues}
-              handleElementOnDrop={handleElementOnDrop}
+              handleSave={handleSave}
             />
           </div>
         ) : null}

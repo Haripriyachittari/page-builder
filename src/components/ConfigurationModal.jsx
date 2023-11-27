@@ -3,7 +3,7 @@ import React from "react";
 const ConfigurationModal = ({
   modalValues,
   handleChangeModalValues,
-  handleElementOnDrop,
+  handleSave,
 }) => {
   return (
     <div className="flex bg-white flex-col w-[400px] absolute right-16 top-20 p-4 rounded-md shadow-md ">
@@ -60,7 +60,7 @@ const ConfigurationModal = ({
         />
       </div>
       <button
-        onClick={handleElementOnDrop}
+        onClick={handleSave}
         className="p-2 rounded-md my-3 w-[50%] bg-blue-500 text-white font-semibold"
       >
         Save Changes
