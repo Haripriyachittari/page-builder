@@ -1,7 +1,12 @@
-import React from "react";
+import React, { DragEventHandler } from "react";
 import gripIcon from "../assets/grip-vertical.png";
+import { blocks } from "../constants";
 
-const Sidebar = ({ blocks, handleDrag }) => {
+interface Props {
+  handleDrag: DragEventHandler<HTMLElement>;
+}
+
+const Sidebar: React.FC<Props> = ({ handleDrag }) => {
   return (
     <div className="h-full w-[21%] bg-[#2D2D2D] p-4 text-white " id="sidebar">
       <p className="text-xl font-semibold"> BLOCKS </p>

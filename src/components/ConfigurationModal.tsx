@@ -1,5 +1,6 @@
-import React from "react";
+import React, { ChangeEventHandler, MouseEventHandler } from "react";
 import closeIcon from "../assets/closeicon.png";
+import { Element } from "../views/Home";
 
 const formElements = [
   {
@@ -27,9 +28,16 @@ const formElements = [
     label: "Font Weight",
     placeholder: "Enter font weight",
   },
-];
+] as const;
 
-const ConfigurationModal = ({
+interface Props {
+  setModalValues: React.Dispatch<React.SetStateAction<Element | null>>;
+  modalValues: Element;
+  handleChangeModalValues: ChangeEventHandler<HTMLInputElement>;
+  handleSave: MouseEventHandler<HTMLButtonElement>;
+}
+
+const ConfigurationModal: React.FC<Props> = ({
   setModalValues,
   modalValues,
   handleChangeModalValues,
@@ -41,7 +49,7 @@ const ConfigurationModal = ({
         <p className="text-[21px] font-semibold">Edit {modalValues.type}</p>
         <button
           className="cursor-pointer font-semibold"
-          onClick={() => setModalValues(false)}
+          onClick={() => setModalValues(null)}
         >
           <img alt="icon" src={closeIcon} />
         </button>
