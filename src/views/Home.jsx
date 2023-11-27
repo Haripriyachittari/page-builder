@@ -1,29 +1,43 @@
 import React, { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
-import icon from "../assets/grip-vertical.png";
 import ConfigurationModal from "../components/ConfigurationModal";
+import Sidebar from "../components/Sidebar";
+
+const blocks = [
+  {
+    key: "label",
+    text: "Label",
+  },
+  {
+    key: "input",
+    text: "Input",
+  },
+  {
+    key: "button",
+    text: "Button",
+  },
+];
+const blockElements = blocks.map((block) => block.key);
 
 const selectedElementedStyles = "border-red-500 border ";
-
 const elementStyles = {
   button:
-    "flex gap-2 items-start bg-blue-500 text-white hover:border hover:border-red-500 p-2 my-4",
+    "absolute bg-[#0044C1] flex gap-2 hover:border hover:border-red-500 items-start my-4 p-2 text-white",
   input:
-    "flex gap-2 items-start hover:border hover:border-red-500 border rounded-md p-2 my-4",
+    "absolute border bg-white flex gap-2 hover:border hover:border-red-500 items-start my-4 p-2 focus:outline-none",
   label:
-    "flex gap-2 items-start hover:border hover:border-red-500  rounded-md p-2 my-4",
+    "absolute flex gap-2 hover:border hover:border-red-500 items-start my-4",
 };
 
 const Home = () => {
   const [elements, setElements] = useState(
-    JSON.parse(localStorage.getItem("__config__")) ?? []
+    JSON.parse(localStorage.getItem("__config__")) ?? [],
   );
-  const [selectedElement, setSelectedElement] = useState();
-  const [modalValues, setModalValues] = useState();
+  const [selectedElement, setSelectedElement] = useState(null);
+  const [modalValues, setModalValues] = useState(null);
 
   const handleChangeModalValues = (event) => {
     const { name, value } = event.target;
-    console.log(name, value);
     setModalValues((prev) => {
       return { ...prev, properties: { ...prev.properties, [name]: value } };
     });
@@ -34,23 +48,19 @@ const Home = () => {
   };
 
   const handleSave = () => {
-    console.log("save");
-    if (elements?.map((element) => element.id).includes(modalValues.id)) {
-      debugger;
+    if (elements.map((element) => element.id).includes(modalValues.id)) {
       setElements((prev) =>
         prev.reduce((acc, curr) => {
           if (curr.id === modalValues.id) {
-            debugger;
             acc.push(modalValues);
           } else {
             acc.push(curr);
           }
           return acc;
-        }, [])
+        }, []),
       );
       setSelectedElement(null);
     } else {
-      debugger;
       setElements((prev) => [...prev, modalValues]);
     }
     setModalValues(null);
@@ -64,10 +74,13 @@ const Home = () => {
     event.dataTransfer.setData("text/plain", event.target.dataset.elementType);
   };
 
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
   const handleDrop = (event) => {
     const data = event.dataTransfer.getData("text/plain");
-    console.log(data, "data");
-    if (!["button", "input", "label"].includes(data)) {
+    if (!blockElements.includes(data)) {
       if (elements.map((element) => element.id).includes(data)) {
         setElements((prev) =>
           prev.reduce((acc, curr) => {
@@ -84,7 +97,7 @@ const Home = () => {
               acc.push(curr);
             }
             return acc;
-          }, [])
+          }, []),
         );
       }
       return;
@@ -103,6 +116,7 @@ const Home = () => {
     };
     setModalValues(element);
   };
+
   useEffect(() => {
     localStorage.setItem("__config__", JSON.stringify(elements));
   }, [elements]);
@@ -115,7 +129,7 @@ const Home = () => {
       }
       if (event.code === "Delete") {
         setElements((prev) =>
-          prev.filter((prev) => prev.id !== selectedElement?.id)
+          prev.filter((prev) => prev.id !== selectedElement?.id),
         );
         setSelectedElement(null);
       }
@@ -128,14 +142,14 @@ const Home = () => {
   }, [selectedElement]);
 
   return (
-    <div className="flex h-[100vh]">
+    <div className="flex h-screen">
       <div
         id="parent"
-        className="flex-1 flex h-full  relative"
+        className="relative flex h-full flex-1 bg-[#F3F3F3]"
         onDrop={handleDrop}
-        onDragOver={(event) => event.preventDefault()}
+        onDragOver={handleDragOver}
       >
-        {elements?.map((element) => (
+        {elements.map((element) => (
           <element.type
             key={element.id}
             onClick={() => handleSelectElement(element)}
@@ -162,49 +176,18 @@ const Home = () => {
             {element.type !== "input" ? element.properties.text : null}
           </element.type>
         ))}
-        {modalValues ? (
-          <div className="w-full h-full absolute top-0 flex justify-end items-center cursor-pointer bottom-0 left-0 right-0 bg-[rgba(0,0,0,0.3)]">
-            <ConfigurationModal
-              modalValues={modalValues}
-              handleChangeModalValues={handleChangeModalValues}
-              handleSave={handleSave}
-            />
-          </div>
-        ) : null}
       </div>
-      <div
-        className="w-[21%] h-full  bg-[#2D2D2D] text-white p-4 "
-        id="sidebar"
-      >
-        <p className="text-xl font-semibold"> BLOCKS </p>
-        <div
-          data-element-type="label"
-          draggable
-          className="flex gap-2 shadow-md border bg-white rounded-md p-2.5 my-4"
-          onDragStart={handleDrag}
-        >
-          <img alt="icon" src={icon} />
-          <p className="text-black"> Label </p>
+      <Sidebar blocks={blocks} handleDrag={handleDrag} />
+      {modalValues ? (
+        <div className="fixed bottom-0 left-0 right-0 top-0 flex h-full w-full cursor-pointer items-center justify-end bg-[rgba(0,0,0,0.3)]">
+          <ConfigurationModal
+            modalValues={modalValues}
+            handleChangeModalValues={handleChangeModalValues}
+            handleSave={handleSave}
+            setModalValues={setModalValues}
+          />
         </div>
-        <div
-          data-element-type="input"
-          draggable
-          className="flex gap-2 shadow-md border bg-white rounded-md p-2.5 my-4"
-          onDragStart={handleDrag}
-        >
-          <img alt="icon" src={icon} />
-          <p className="text-black">Input</p>
-        </div>
-        <div
-          data-element-type="button"
-          draggable
-          className="flex gap-2 shadow-md border bg-white rounded-md p-2.5 my-4"
-          onDragStart={handleDrag}
-        >
-          <img alt="icon" src={icon} />
-          <p className="text-black">Button</p>
-        </div>
-      </div>
+      ) : null}
     </div>
   );
 };

@@ -1,70 +1,72 @@
 import React from "react";
+import closeIcon from "../assets/closeicon.png";
+
+const formElements = [
+  {
+    name: "text",
+    label: "Text",
+    placeholder: "Enter text",
+  },
+  {
+    name: "x",
+    label: "X",
+    placeholder: "Enter x",
+  },
+  {
+    name: "y",
+    label: "Y",
+    placeholder: "Enter y",
+  },
+  {
+    name: "fontSize",
+    label: "Font Size",
+    placeholder: "Enter font size",
+  },
+  {
+    name: "fontWeight",
+    label: "Font Weight",
+    placeholder: "Enter font weight",
+  },
+];
 
 const ConfigurationModal = ({
+  setModalValues,
   modalValues,
   handleChangeModalValues,
   handleSave,
 }) => {
   return (
-    <div className="flex bg-white flex-col w-[320px] mr-12 p-4 rounded-md shadow-md ">
-      <p className="text-2xl font-semibold mb-2">Edit {modalValues.type}</p>
-      <hr />
-      <div className="my-1 flex flex-col ">
-        <label className="mb-1 font-semibold ">Text</label>
-        <input
-          name="text"
-          onChange={handleChangeModalValues}
-          value={modalValues.properties.text}
-          className="border focus:outline-none rounded-md p-1.5"
-          placeholder="Enter text"
-        />
+    <div className="mr-[400px] flex w-[320px] flex-col   bg-white shadow-md ">
+      <div className="flex items-center justify-between border-b p-4">
+        <p className="text-[21px] font-semibold">Edit {modalValues.type}</p>
+        <button
+          className="cursor-pointer font-semibold"
+          onClick={() => setModalValues(false)}
+        >
+          <img alt="icon" src={closeIcon} />
+        </button>
       </div>
-      <div className="my-1 flex flex-col">
-        <label className="mb-1 font-semibold">X</label>
-        <input
-          name="x"
-          onChange={handleChangeModalValues}
-          value={modalValues.properties.x}
-          className="border focus:outline-none rounded-md p-1.5"
-          placeholder="Enter X"
-        />
+
+      <div className="p-4 text-[#262626]">
+        {formElements.map((formElement) => (
+          <div className=" my-3 flex flex-col ">
+            <label className="mb-1 text-sm">{formElement.label}</label>
+            <input
+              name={formElement.name}
+              onChange={handleChangeModalValues}
+              value={modalValues.properties[formElement.name]}
+              className="text-md border p-1.5 focus:outline-none"
+              placeholder={formElement.placeholder}
+            />
+          </div>
+        ))}
+        <button
+          onClick={handleSave}
+          className="mt-4 w-[42%] rounded-sm bg-[#0044C1] p-1.5 text-white"
+        >
+          Save Changes
+        </button>
       </div>
-      <div className="my-1 flex flex-col">
-        <label className="mb-1 font-semibold">Y</label>
-        <input
-          name="y"
-          onChange={handleChangeModalValues}
-          value={modalValues.properties.y}
-          className="border focus:outline-none rounded-md p-1.5"
-          placeholder="Enter Y"
-        />
-      </div>
-      <div className="my-1 flex flex-col">
-        <label className="mb-1 font-semibold">Font Size</label>
-        <input
-          name="fontSize"
-          onChange={handleChangeModalValues}
-          value={modalValues.properties.fontSize}
-          className="border focus:outline-none rounded-md p-1.5"
-          placeholder="Enter fontsize"
-        />
-      </div>
-      <div className="my-1 flex flex-col">
-        <label className="mb-1 font-semibold">Font Weight</label>
-        <input
-          name="fontWeight"
-          onChange={handleChangeModalValues}
-          value={modalValues.properties.fontWeight}
-          className="border focus:outline-none rounded-md p-1.5"
-          placeholder="Enter fontweight"
-        />
-      </div>
-      <button
-        onClick={handleSave}
-        className="p-1.5 rounded-md mt-4 w-[50%] bg-blue-500 text-white font-semibold"
-      >
-        Save Changes
-      </button>
     </div>
   );
 };
