@@ -16,7 +16,7 @@ const elementStyles = {
 
 const Home = () => {
   const [elements, setElements] = useState(
-    JSON.parse(localStorage.getItem("__config__"))
+    JSON.parse(localStorage.getItem("__config__")) ?? []
   );
   const [selectedElement, setSelectedElement] = useState();
   const [modalValues, setModalValues] = useState();
