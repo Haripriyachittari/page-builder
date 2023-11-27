@@ -8,7 +8,7 @@ import React, {
 import { v4 as uuid } from "uuid";
 import ConfigurationModal from "../components/ConfigurationModal";
 import Sidebar from "../components/Sidebar";
-import { blocks, blockElements } from "../constants";
+import { blockElements } from "../constants";
 
 const selectedElementedStyles = "border-red-500 border ";
 const elementStyles = {
@@ -132,6 +132,17 @@ const Home = () => {
     setModalValues(element);
   };
 
+  const handleDownloadLayout = () => {
+    const blob = new Blob([JSON.stringify(elements, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "layout.json";
+    a.click();
+  };
+
   useEffect(() => {
     localStorage.setItem("__config__", JSON.stringify(elements));
   }, [elements]);
@@ -160,10 +171,16 @@ const Home = () => {
     <div className="flex h-screen">
       <div
         id="parent"
-        className="relative flex h-full flex-1 bg-[#F3F3F3]"
+        className="relative flex h-full flex-1 items-start bg-[#F3F3F3]"
         onDrop={handleDrop}
         onDragOver={handleDragOver}
       >
+        <button
+          className="m-2 bg-[#0044C1] p-1.5 text-sm text-white"
+          onClick={handleDownloadLayout}
+        >
+          Download as JSON
+        </button>
         {elements.map((element) => (
           <element.type
             key={element.id}
