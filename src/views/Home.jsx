@@ -7,11 +7,11 @@ const selectedElementedStyles = "border-red-500 border ";
 
 const elementStyles = {
   button:
-    "flex gap-2 items-start bg-blue-500 text-white hover:border hover:border-red-500 p-4 my-4",
+    "flex gap-2 items-start bg-blue-500 text-white hover:border hover:border-red-500 p-2 my-4",
   input:
-    "flex gap-2 items-start hover:border hover:border-red-500 border rounded-md p-4 my-4",
+    "flex gap-2 items-start hover:border hover:border-red-500 border rounded-md p-2 my-4",
   label:
-    "flex gap-2 items-start hover:border hover:border-red-500  rounded-md p-4 my-4",
+    "flex gap-2 items-start hover:border hover:border-red-500  rounded-md p-2 my-4",
 };
 
 const Home = () => {
@@ -35,7 +35,7 @@ const Home = () => {
 
   const handleSave = () => {
     console.log("save");
-    if (elements.map((element) => element.id).includes(modalValues.id)) {
+    if (elements?.map((element) => element.id).includes(modalValues.id)) {
       debugger;
       setElements((prev) =>
         prev.reduce((acc, curr) => {
@@ -131,7 +131,7 @@ const Home = () => {
     <div className="flex h-[100vh]">
       <div
         id="parent"
-        className="flex-1 h-full border border-green-400 relative"
+        className="flex-1 flex h-full  relative"
         onDrop={handleDrop}
         onDragOver={(event) => event.preventDefault()}
       >
@@ -163,14 +163,7 @@ const Home = () => {
           </element.type>
         ))}
         {modalValues ? (
-          <div
-            className="w-full h-full absolute top-0 cursor-pointer bottom-0 left-0 right-0 bg-[rgba(0,0,0,0.3)]"
-            // onClick={(e) => {
-            //   e.preventDefault();
-            //   e.stopPropagation();
-            //   setModalValues(null);
-            // }}
-          >
+          <div className="w-full h-full absolute top-0 flex justify-end items-center cursor-pointer bottom-0 left-0 right-0 bg-[rgba(0,0,0,0.3)]">
             <ConfigurationModal
               modalValues={modalValues}
               handleChangeModalValues={handleChangeModalValues}
@@ -180,14 +173,14 @@ const Home = () => {
         ) : null}
       </div>
       <div
-        className="w-[21%] h-full border bg-[#2D2D2D] text-white p-4 "
+        className="w-[21%] h-full  bg-[#2D2D2D] text-white p-4 "
         id="sidebar"
       >
         <p className="text-xl font-semibold"> BLOCKS </p>
         <div
           data-element-type="label"
           draggable
-          className="flex gap-2 shadow-md border bg-white rounded-md p-4 my-4"
+          className="flex gap-2 shadow-md border bg-white rounded-md p-2.5 my-4"
           onDragStart={handleDrag}
         >
           <img alt="icon" src={icon} />
@@ -196,7 +189,7 @@ const Home = () => {
         <div
           data-element-type="input"
           draggable
-          className="flex gap-2 shadow-md border bg-white rounded-md p-4 my-4"
+          className="flex gap-2 shadow-md border bg-white rounded-md p-2.5 my-4"
           onDragStart={handleDrag}
         >
           <img alt="icon" src={icon} />
@@ -205,7 +198,7 @@ const Home = () => {
         <div
           data-element-type="button"
           draggable
-          className="flex gap-2 shadow-md border bg-white rounded-md p-4 my-4"
+          className="flex gap-2 shadow-md border bg-white rounded-md p-2.5 my-4"
           onDragStart={handleDrag}
         >
           <img alt="icon" src={icon} />
